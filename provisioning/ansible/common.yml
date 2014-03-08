@@ -1,0 +1,12 @@
+---
+- hosts: all
+  pre_tasks:
+    - name: Update Aptitude cache if outdated
+      sudo: true
+      apt: update_cache=yes cache_valid_time={{ 24 * 60 * 60 }}
+
+    - name: Install Ansible support packages
+      sudo: true
+      apt: pkg={{ item }} state=present
+      with_items:
+        - python-pycurl
