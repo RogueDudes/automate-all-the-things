@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+
+server {
+	listen 80 default_server;
+
+	server_name {{ nginx_server_name }};
+
+	root {{ nginx_root }};
+
+	location / {
+
+		{% if wsgi_server is defined and wsgi_server == 'uwsgi' %}
+
+			include uwsgi_params;
+			uwsgi_pass {{ uwsgi_socket }};
+
+		{% endif %}
+
+	}
+}

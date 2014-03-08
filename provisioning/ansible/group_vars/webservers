@@ -1,0 +1,6 @@
+---
+wsgi_server: uwsgi
+wsgi_file: /vagrant/src/app.py
+
+
+# vi: set ft=yaml :

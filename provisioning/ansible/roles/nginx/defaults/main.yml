@@ -1,0 +1,4 @@
+---
+nginx_server_name: '{{ inventory_hostname }}'
+nginx_site_name: app
+nginx_root: /usr/share/nginx/html/

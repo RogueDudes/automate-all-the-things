@@ -2,3 +2,4 @@
 - hosts: webservers
   roles:
     - { role: nginx }
+    - { role: uwsgi, when: "wsgi_server is defined and wsgi_server == 'uwsgi'" }

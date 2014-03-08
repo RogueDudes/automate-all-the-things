@@ -1,0 +1,5 @@
+; {{ ansible_managed }}
+
+[uwsgi]
+socket = {{ uwsgi_socket }}
+wsgi-file = {{ wsgi_file | mandatory }}

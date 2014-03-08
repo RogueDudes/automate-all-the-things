@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: python3, with_dev: true }

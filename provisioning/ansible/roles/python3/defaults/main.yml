@@ -1,0 +1,5 @@
+---
+python_version: 3.2
+python_executable: 'python{{ python_version }}'
+
+pip_executable: 'pip{{ python_version }}'

@@ -1,0 +1,30 @@
+---
+- name: Install packages
+  sudo: true
+  apt: >
+    pkg={{ item }}
+    state=present
+  with_items:
+    - 'python{{ python_version }}'
+
+- name: Install development packages
+  sudo: true
+  apt: >
+    pkg={{ item }}
+    state=present
+  with_items:
+    - 'python{{ python_version }}-dev'
+  when: with_dev is defined and with_dev
+
+- name: Check if pip is installed
+  command: >
+    which {{ pip_executable }}
+  register: pip_installed
+  changed_when: false
+  ignore_errors: true
+
+- name: Install pip
+  sudo: true
+  shell: >
+    wget -qO- https://raw.github.com/pypa/pip/master/contrib/get-pip.py | {{ python_executable }}
+  when: pip_installed | failed

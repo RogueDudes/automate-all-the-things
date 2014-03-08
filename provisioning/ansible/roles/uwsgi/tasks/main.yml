@@ -1,0 +1,48 @@
+---
+- name: Install prerequisites for building
+  sudo: true
+  apt: >
+    pkg={{ item }}
+    state=present
+  with_items:
+    - build-essential
+
+- name: Insall uWSGI
+  sudo: true
+  pip: >
+    executable={{ pip_executable }}
+    name=uwsgi
+    state=present
+
+- name: Install Upstart script for uWSGI Emperor
+  sudo: true
+  template: >
+    src=uwsgi.conf.j2
+    dest=/etc/init/uwsgi.conf
+
+- name: Create uWSGI Emperor configuration directory
+  sudo: true
+  file: >
+    path=/etc/uwsgi/vassals/
+    state=directory
+    recurse=yes
+
+- name: Create vassal configuration
+  sudo: true
+  template: >
+    src={{ item }}
+    dest=/etc/uwsgi/vassals/{{ uwsgi_vassal_name }}.ini
+  with_first_found:
+    - files: [uwsgi.ini.j2]
+      paths: ../../../host_files/{{ inventory_hostname }}/
+    - files: [uwsgi.ini.j2]
+      paths: "{{ ( '../../../group_files/' + ( group_names | join(';../../../group_files/') ) ).split(';') }}"
+    - files: [vassal.ini.j2]
+      paths: ../templates/
+  notify: restart uwsgi
+
+- name: Start uWSGI Emperor
+  sudo: true
+  service: >
+    name=uwsgi
+    state=started

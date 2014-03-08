@@ -1,3 +1,49 @@
 ---
+- name: Add PPA for stable releases
+  sudo: true
+  apt_repository: >
+    repo='ppa:nginx/stable'
+    update_cache=true
 
-# XXX: Not implemented.
+- name: Install packages
+  sudo: true
+  apt: >
+    pkg={{ item }}
+    state=latest
+  with_items:
+    - nginx
+
+- name: Create site configuration
+  sudo: true
+  template: >
+    src={{ item }}
+    dest=/etc/nginx/sites-available/{{ nginx_site_name }}
+  with_first_found:
+    - files: [nginx.conf.j2]
+      paths: ../../../host_files/{{ inventory_hostname }}/
+    - files: [nginx.conf.j2]
+      paths: "{{ ( '../../../group_files/' + ( group_names | join(';../../../group_files/') ) ).split(';') }}"
+    - files: [site.conf.j2]
+      paths: ../templates/
+  notify: restart nginx
+
+- name: Disable default site
+  sudo: true
+  file: >
+    path=/etc/nginx/sites-enabled/default
+    state=absent
+  notify: restart nginx
+
+- name: Enable custom site
+  sudo: true
+  file: >
+    path=/etc/nginx/sites-enabled/{{ nginx_site_name }}
+    src=/etc/nginx/sites-available/{{ nginx_site_name }}
+    state=link
+  notify: restart nginx
+
+- name: Start nginx
+  sudo: true
+  service: >
+    name=nginx
+    state=started
