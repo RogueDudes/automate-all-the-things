@@ -15,7 +15,7 @@ install: vagrant-up
 
 # Vagrant is not happy when its running from source.
 # By overriding the environment, we can trick it to suppress warning messages.
-VAGRANT_BIN := VAGRANT_INSTALLER_ENV= '$(BIN_PATH)/vagrant'
+VAGRANT_BIN := '$(BIN_PATH)/vagrant'
 
 # Bring up the virtual machine if it doesn't already exist.
 vagrant-up: verify-prerequisites bundle-install
