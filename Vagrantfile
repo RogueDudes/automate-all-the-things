@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Enable NFS synced folders.
-  config.vm.synced_folder '.', '/vagrant', nfs: true
+  config.vm.synced_folder '.', '/vagrant', type: 'nfs'
 
   # Use Ansible for provisioning.
   config.vm.provision 'ansible' do |ansible|
