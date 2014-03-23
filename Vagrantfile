@@ -1,7 +1,6 @@
 VAGRANTFILE_API_VERSION = '2'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
   config.vm.box = 'hashicorp/precise64'
 
   config.vm.boot_timeout = 3600
@@ -19,10 +18,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder '.', '/vagrant', type: 'nfs'
 
   # Use Ansible for provisioning.
-  config.vm.provision 'ansible' do |ansible|
+  config.vm.provision :ansible do |ansible|
     ansible.inventory_path = 'provisioning/ansible/inventory/vagrant.ini'
     ansible.playbook = 'provisioning/ansible/app.yml'
     ansible.host_key_checking = false
+  end
+
+  # Provision the machine with puppet. If you need any more debug information,
+  # pass `DEBUG=1` as an environmental variable to `vagrant up`.
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = 'provisioning/puppet/manifests'
+    puppet.module_path    = ['provisioning/puppet/modules', 'provisioning/puppet/vendor']
+    puppet.options        = '--verbose --debug' if ENV['DEBUG']
   end
 end
 
