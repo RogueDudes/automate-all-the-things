@@ -19,7 +19,7 @@ VAGRANT_BIN := '$(BIN_PATH)/vagrant'
 
 # Bring up the virtual machine if it doesn't already exist.
 vagrant-up: verify-prerequisites bundle-install
-	@$(VAGRANT_BIN) up
+	@$(VAGRANT_BIN) up --no-provision
 
 verify-prerequisites:
 	@$(foreach PREREQUISITE,$(PREREQUISITES), \
