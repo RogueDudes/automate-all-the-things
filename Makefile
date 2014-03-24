@@ -43,5 +43,10 @@ bundle-install:
 	@$(ECHO) 'Updating RubyGem dependencies in "$(VENDOR_PATH)"...\n'
 	@bundle install --path '$(VENDOR_PATH)' --binstubs '$(BIN_PATH)'
 
+# Install 3rd-party modules for the Puppet provisioning.
+puppet-deps: bundle-install
+	@$(ECHO) 'Install Puppet 3rd-party modules in "$(VENDOR_PATH)... \n'
+	@bundle exec librarian-puppet install
+
 
 # vi: set ft=make ts=4 sts=4 sw=4 noet :
