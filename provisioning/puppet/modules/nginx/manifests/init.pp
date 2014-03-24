@@ -1,0 +1,37 @@
+class nginx(
+  $server_name  = $::hostname,
+  $site_name    = 'app',
+  $root         = '/usr/share/nginx/html/',
+  $uwsgi_socket = '127.0.0.1:3031'
+) {
+  # Let each file in the current scope depend on the nginx package and restart
+  # its service.
+  File {
+    require => Package['nginx'],
+    notify  => Service['nginx']
+  }
+
+  # Add a PPA for the stable release and install the package.
+  apt::ppa { 'ppa:nginx/stable': } -> package { 'nginx': }
+
+  file {
+    # Disable the default site.
+    '/etc/nginx/sites-enabled/default':
+      ensure => absent;
+
+    # Enable the custom site.
+    "/etc/nginx/sites-enabled/${site_name}":
+      ensure => link,
+      target => "/etc/nginx/sites-available/${site_name}";
+
+    "/etc/nginx/sites-available/${site_name}":
+      content => template('nginx/site.conf.erb')
+  }
+
+  # Start nginx right now and on boot.
+  service { 'nginx':
+    ensure  => running,
+    enable  => true,
+    require => Package['nginx']
+  }
+}
