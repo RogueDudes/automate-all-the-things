@@ -28,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # pass `DEBUG=1` as an environmental variable to `vagrant up`.
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = 'provisioning/puppet/manifests'
-    puppet.module_path    = ['provisioning/puppet/modules', 'provisioning/puppet/vendor']
+    puppet.module_path    = ['provisioning/puppet/modules', 'vendor/puppet']
     puppet.options        = '--verbose --debug' if ENV['DEBUG']
   end
 end
