@@ -7,11 +7,18 @@ PREREQUISITES := \
 	VBoxManage:VirtualBox:https://www.virtualbox.org/wiki/Downloads \
 	ansible-playbook:Ansible:http://docs.ansible.com/intro_installation.html \
 
-ECHO := /bin/echo -ne
+ECHO := printf
 
 .PHONY: install verify-prerequisites vagrant-up bundle-install
 
 install: vagrant-up
+	@$(ECHO) 'The machine is created. To provision it run `make ansible` or `make puppet`.'
+
+ansible: vagrant-up
+	@$(VAGRANT_BIN) provision --provision-with=ansible
+
+puppet: vagrant-up
+	@$(VAGRANT_BIN) provision --provision-with=puppet
 
 # Vagrant is not happy when its running from source.
 # By overriding the environment, we can trick it to suppress warning messages.
