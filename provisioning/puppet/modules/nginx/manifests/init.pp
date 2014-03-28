@@ -11,8 +11,8 @@ class nginx(
     notify  => Service['nginx']
   }
 
-  # Add a PPA for the stable release and install the package.
-  apt::ppa { 'ppa:nginx/stable': } -> package { 'nginx': }
+  # Add a PPA for the stable release and install the latest package.
+  apt::ppa { 'ppa:nginx/stable': } -> package { 'nginx': ensure => latest }
 
   file {
     # Disable the default site.
