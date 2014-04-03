@@ -6,7 +6,7 @@ Ansible
 To test the Ansible configuration, run:
 
 ```
-make ansuble
+make ansible
 ```
 
 Puppet
